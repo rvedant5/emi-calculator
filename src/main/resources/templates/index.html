@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>EMI Calculator</title>
+<script>
+        function updateValues() {
+            document.getElementById('loanAmountValue').innerText = document.getElementById('loanAmount').value;
+            document.getElementById('interestRateValue').innerText = document.getElementById('interestRate').value;
+            document.getElementById('tenureYearsValue').innerText = document.getElementById('tenureYears').value;
+        }
+
+        function calculateEMI() {
+            const loanAmount = document.getElementById('loanAmount').value;
+            const interestRate = document.getElementById('interestRate').value;
+            const tenureYears = document.getElementById('tenureYears').value;
+
+            fetch(`http://localhost:9001/calculateEMI?loanAmount=${loanAmount}&interestRate=${interestRate}&tenureYears=${tenureYears}`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result').innerText = data;
+            });
+
+        }
+    </script>
+</head>
+<body onload="updateValues()">
+	<h1>EMI Calculator</h1>
+
+	<div>
+		<label>Loan Amount: ₹<span id="loanAmountValue"></span></label><br>
+		<input type="range" id="loanAmount" min="10000" max="1000000"
+			step="1000" value="500000" oninput="updateValues()">
+	</div>
+
+	<div>
+		<label>Interest Rate: <span id="interestRateValue"></span>%
+		</label><br> <input type="range" id="interestRate" min="1" max="20"
+			step="0.1" value="7.5" oninput="updateValues()">
+	</div>
+
+	<div>
+		<label>Tenure (Years): <span id="tenureYearsValue"></span></label><br>
+		<input type="range" id="tenureYears" min="1" max="30" step="1"
+			value="10" oninput="updateValues()">
+	</div>
+
+	<button onclick="calculateEMI()">Calculate EMI</button>
+
+	<h3>Result:</h3>
+	<p id="result"></p>
+</body>
+</html>
